@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>リペア管理アプリ 取扱説明書</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#f8f8f6;color:#1a1a1a;font-size:14px;line-height:1.7}
+  .cover{background:#1a1a1a;color:#fff;padding:60px 40px;display:flex;align-items:center;gap:24px}
+  .cover img{width:64px;height:64px;object-fit:contain}
+  .cover-text h1{font-size:28px;font-weight:700;letter-spacing:.02em}
+  .cover-text p{font-size:13px;color:#aaa;margin-top:4px}
+  .cover-text .version{font-size:11px;color:#666;margin-top:8px;border:1px solid #444;display:inline-block;padding:2px 8px;border-radius:4px}
+  .toc{background:#fff;border-bottom:1px solid #e8e8e8;padding:20px 40px}
+  .toc h2{font-size:12px;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+  .toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px 20px}
+  .toc a{color:#4a7c59;text-decoration:none;font-size:13px}
+  .toc a:hover{text-decoration:underline}
+  .wrap{max-width:860px;margin:0 auto;padding:40px 24px 80px}
+  .section{background:#fff;border-radius:12px;border:1px solid #e8e8e8;margin-bottom:32px;overflow:hidden}
+  .section-hdr{padding:20px 28px 16px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:12px}
+  .section-num{width:28px;height:28px;border-radius:50%;background:#1a1a1a;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .section-hdr h2{font-size:17px;font-weight:700}
+  .badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;letter-spacing:.5px}
+  .badge-new{background:#e8f5e9;color:#2e7d32}
+  .badge-fix{background:#fff3e0;color:#e65100}
+  .section-body{padding:24px 28px}
+  .step{display:flex;gap:14px;margin-bottom:18px}
+  .step:last-child{margin-bottom:0}
+  .step-num{width:24px;height:24px;border-radius:50%;background:#f0f0f0;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .step-body h3{font-size:13.5px;font-weight:700;margin-bottom:4px}
+  .step-body p{font-size:13px;color:#444;line-height:1.65}
+  .note{background:#f5f5f5;border-left:3px solid #bbb;border-radius:0 6px 6px 0;padding:10px 14px;margin-top:10px;font-size:12.5px;color:#555}
+  .note.warn{background:#fff8e1;border-color:#f9a825;color:#795548}
+  .note.tip{background:#e8f5e9;border-color:#4caf50;color:#2e7d32}
+  .ui-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+  .ui-btn{display:inline-flex;align-items:center;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;border:1px solid #ddd;background:#fff}
+  .ui-btn.green{background:#e8f5e9;border-color:#4caf50;color:#2e7d32}
+  .ui-btn.red{background:#ffeaea;border-color:#ef9a9a;color:#c62828}
+  .ui-btn.dark{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+  .ui-btn.gray{background:#f5f5f5;color:#555}
+  .menu-tree{background:#1e1e1e;border-radius:8px;padding:16px 20px;font-family:monospace;font-size:12.5px;color:#ccc;line-height:2}
+  .menu-tree .cat{color:#888;font-size:11px;letter-spacing:1px;text-transform:uppercase}
+  .menu-tree .item{padding-left:14px}
+  .menu-tree .item.highlight{color:#3fb950}
+  .menu-tree .item.moved{color:#58a6ff}
+  .photo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+  .photo-slot{background:#f5f5f5;border:1.5px dashed #ccc;border-radius:8px;height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:#999}
+  .photo-slot.filled{background:#e8f5e9;border-color:#4caf50;color:#2e7d32;font-weight:600}
+  .photo-slot .slot-label{font-size:10px;font-weight:700}
+  .photo-slot.before .slot-label{color:#e65100}
+  .photo-slot.during .slot-label{color:#1565c0}
+  .photo-slot.after .slot-label{color:#2e7d32}
+  .divider{border:none;border-top:1px solid #f0f0f0;margin:20px 0}
+  .tag-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .tag{background:#f0f0f0;border-radius:4px;padding:3px 8px;font-size:11.5px;color:#555}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+  th{background:#f5f5f5;text-align:left;padding:8px 12px;font-weight:600;border-bottom:2px solid #e8e8e8}
+  td{padding:8px 12px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  .footer{text-align:center;color:#bbb;font-size:11px;padding:20px}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <img src="logo.png" alt="logo">
+  <div class="cover-text">
+    <h1>リペア管理アプリ　取扱説明書</h1>
+    <p>RepairFlow — バッグ・シューズのリペア・クリーニング受付管理システム</p>
+    <span class="version">2026年5月版</span>
+  </div>
+</div>
+
+<div class="toc">
+  <h2>目次</h2>
+  <ul>
+    <li><a href="#s1">1. 画面構成</a></li>
+    <li><a href="#s2">2. 新規受付</a></li>
+    <li><a href="#s3">3. 受付一覧</a></li>
+    <li><a href="#s4">4. 画像管理</a></li>
+    <li><a href="#s5">5. データ同期</a></li>
+    <li><a href="#s6">6. ステータスの流れ</a></li>
+    <li><a href="#s7">7. よくある質問</a></li>
+    <li><a href="#s8">8. スプレッドシートの操作</a></li>
+    <li><a href="#s9">9. スマホでの操作</a></li>
+  </ul>
+</div>
+
+<div class="wrap">
+
+  <!-- 1. 画面構成 -->
+  <div class="section" id="s1">
+    <div class="section-hdr">
+      <div class="section-num">1</div>
+      <h2>画面構成</h2>
+    </div>
+    <div class="section-body">
+      <p style="margin-bottom:14px">左側のメニューからすべての機能にアクセスできます。</p>
+      <div class="menu-tree">
+        <div class="cat">メイン</div>
+        <div class="item">ダッシュボード（本日の業務状況）</div>
+        <div class="item">新規受付（受付登録フォーム）</div>
+        <div class="item moved">月次レポート　← メインタブに移動</div>
+        <div class="cat" style="margin-top:8px">管理</div>
+        <div class="item">受付一覧（全案件の一覧・操作）</div>
+        <div class="item">納期管理（納期が近い案件）</div>
+        <div class="item">完了・引渡済</div>
+        <div class="item moved">画像管理　← 管理タブに移動</div>
+        <div class="cat" style="margin-top:8px">設定</div>
+        <div class="item">検索</div>
+        <div class="item">サービス設定（ブランド・GAS連携等）</div>
+        <div class="cat" style="margin-top:8px">—</div>
+        <div class="item highlight">データ同期　← 左メニュー最下部に追加</div>
+      </div>
+      <div class="note tip" style="margin-top:14px">青字はメニュー位置を変更した項目、緑字は新たに追加した項目です。</div>
+    </div>
+  </div>
+
+  <!-- 2. 新規受付 -->
+  <div class="section" id="s2">
+    <div class="section-hdr">
+      <div class="section-num">2</div>
+      <h2>新規受付</h2>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>到着日を入力する</h3>
+          <p>到着日を入力すると、<strong>納期（+14日）が自動計算</strong>されます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>管理番号は自動採番</h3>
+          <p>「RF-001」「RF-002」のように自動で番号が振られます。手動で変更する必要はありません。</p>
+          <div class="note tip">アプリを再起動しても番号が重複しないよう修正済みです。</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>依頼者区分を選ぶ</h3>
+          <div class="tag-list">
+            <span class="tag">一般</span>
+            <span class="tag">バイヤー</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>種別を選ぶと依頼内容の選択肢が変わる</h3>
+          <div class="tag-list">
+            <span class="tag">リペア</span>
+            <span class="tag">クリーニング</span>
+            <span class="tag">リペア・クリーニング</span>
+          </div>
+          <p style="margin-top:8px">種別に応じた依頼内容（ハンドル交換・全体クリーニング 等）がドロップダウンに表示されます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>「受付登録する」ボタンを押す</h3>
+          <p>登録後、フォームが自動でリセットされ次の受付が入力できる状態になります。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 受付一覧 -->
+  <div class="section" id="s3">
+    <div class="section-hdr">
+      <div class="section-num">3</div>
+      <h2>受付一覧</h2>
+      <span class="badge badge-fix">修正済み</span>
+    </div>
+    <div class="section-body">
+      <p style="margin-bottom:16px">登録された全案件を一覧で確認・操作できます。</p>
+      <table>
+        <tr><th>ボタン</th><th>操作内容</th></tr>
+        <tr><td><span class="ui-btn gray">編集</span></td><td>依頼内容・ステータス・金額などを編集する</td></tr>
+        <tr><td><span class="ui-btn gray">票</span></td><td>お預かり票（印刷用）を表示する</td></tr>
+        <tr><td><span class="ui-btn gray">写真</span></td><td>写真管理ページへ移動する</td></tr>
+        <tr><td><span class="ui-btn red">削除</span></td><td>案件を削除する（確認ダイアログが表示される）</td></tr>
+      </table>
+      <div class="note fix warn" style="margin-top:14px">
+        <strong>【修正内容】</strong> 削除ボタンを押しても反応しない不具合を修正しました。押すと確認ダイアログが表示され、「削除する」を押すと完全に削除されます。元に戻せないのでご注意ください。
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 画像管理 -->
+  <div class="section" id="s4">
+    <div class="section-hdr">
+      <div class="section-num">4</div>
+      <h2>画像管理</h2>
+      <span class="badge badge-new">大幅改修</span>
+    </div>
+    <div class="section-body">
+      <p style="margin-bottom:16px">各案件に <strong>加工前・作業中・加工後</strong> の3枠が常に表示されます。写真がない枠は「未登録」と表示されます。</p>
+
+      <div class="photo-grid">
+        <div class="photo-slot before">
+          <div class="slot-label">加工前</div>
+          <div style="font-size:20px">+</div>
+          <div>未登録</div>
+        </div>
+        <div class="photo-slot during">
+          <div class="slot-label">作業中</div>
+          <div style="font-size:20px">+</div>
+          <div>未登録</div>
+        </div>
+        <div class="photo-slot after filled">
+          <div class="slot-label">加工後</div>
+          <div>✓ 登録済み</div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>写真を追加する</h3>
+          <p>空の枠（「＋ 未登録」）をクリックするとモーダルが開きます。カテゴリは自動で選択された状態になります。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Google Drive の共有URLを貼り付ける</h3>
+          <p>Google Drive でファイルを開き → 「共有」→ 「リンクをコピー」して貼り付けます。</p>
+          <div class="note">URL の形式: <code>https://drive.google.com/file/d/〇〇/view?usp=sharing</code></div>
+          <div class="note warn" style="margin-top:8px">
+            <strong>【重要】Googleドライブの共有設定を確認してください。</strong><br>
+            ファイルの共有設定が「<strong>リンクを知っている全員</strong>」になっていないと、写真がアプリ上に表示されません。<br>
+            設定手順：Googleドライブでファイルを右クリック → 「共有」→ 「リンクをコピー」横のアクセス権を「<strong>リンクを知っている全員（閲覧者）</strong>」に変更 → 完了
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>「追加する」を押す</h3>
+          <p>枠に写真が表示されます。右下の <span class="ui-btn dark" style="font-size:11px">差替</span> ボタンを押すと写真を入れ替えられます。</p>
+        </div>
+      </div>
+
+      <div class="note tip" style="margin-top:4px">
+        <strong>1枠1枚まで。</strong> 同じカテゴリに追加した場合、古い写真は自動で上書きされます。
+      </div>
+      <div class="note warn" style="margin-top:8px">
+        <strong>写真の保存について。</strong> 以前は写真を追加してもページを更新すると消える不具合がありました。現在は修正済みです。リロード後も写真は保持されます。
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. データ同期 -->
+  <div class="section" id="s5">
+    <div class="section-hdr">
+      <div class="section-num">5</div>
+      <h2>データ同期（Google Sheets連携）</h2>
+      <span class="badge badge-new">追加</span>
+    </div>
+    <div class="section-body">
+      <p style="margin-bottom:16px">受付データを Google スプレッドシートへ自動送信します。「顧客管理」「月次集計」の2シートが更新されます。</p>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>左メニュー最下部の「データ同期」ボタンを押す</h3>
+          <p>どの画面からでも押せます。送信が完了すると日時が表示されます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>スプレッドシートを確認する</h3>
+          <table>
+            <tr><th>シート名</th><th>内容</th></tr>
+            <tr><td>顧客管理</td><td>全案件の受付日・顧客名・商品名・金額・完了状況</td></tr>
+            <tr><td>月次集計</td><td>過去12ヶ月の月間件数・月間売上・月間完了件数</td></tr>
+          </table>
+          <div class="note tip" style="margin-top:10px">月間売上は「完了」「引渡済」になった案件のみ集計されます。</div>
+          <div class="note" style="margin-top:6px">金額は請求金額（未入力の場合は見積金額）が反映されます。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. ステータスの流れ -->
+  <div class="section" id="s6">
+    <div class="section-hdr">
+      <div class="section-num">6</div>
+      <h2>ステータスの流れ</h2>
+    </div>
+    <div class="section-body">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <span class="ui-btn gray">受付中</span>
+        <span style="color:#bbb">→</span>
+        <span class="ui-btn gray">作業中</span>
+        <span style="color:#bbb">→</span>
+        <span class="ui-btn gray">完了</span>
+        <span style="color:#bbb">→</span>
+        <span class="ui-btn gray">引渡済</span>
+      </div>
+      <table>
+        <tr><th>ステータス</th><th>意味</th><th>集計への影響</th></tr>
+        <tr><td>受付中</td><td>受付済み・未着手</td><td>ダッシュボードの「受付中」件数に反映</td></tr>
+        <tr><td>作業中</td><td>リペア・クリーニング作業中</td><td>ダッシュボードの「作業中」件数に反映</td></tr>
+        <tr><td>完了</td><td>作業完了・お客様への連絡待ち</td><td>月次集計の売上・完了件数に反映</td></tr>
+        <tr><td>引渡済</td><td>お客様へ引渡し完了</td><td>月次集計の売上・完了件数に反映</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 7. よくある質問 -->
+  <div class="section" id="s7">
+    <div class="section-hdr">
+      <div class="section-num">7</div>
+      <h2>よくある質問</h2>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <div class="step-num">Q</div>
+        <div class="step-body">
+          <h3>管理番号が重複していた</h3>
+          <p>アプリ起動時に既存の番号を自動チェックして重複しないよう修正済みです。以降は発生しません。</p>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="step">
+        <div class="step-num">Q</div>
+        <div class="step-body">
+          <h3>写真を追加したのにリロードで消えた</h3>
+          <p>写真追加後にデータが保存されないバグを修正済みです。現在はリロード後も保持されます。</p>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="step">
+        <div class="step-num">Q</div>
+        <div class="step-body">
+          <h3>同期しても金額が0になる</h3>
+          <p>請求金額（実費）が未入力の場合、見積金額を自動で使用するよう修正済みです。</p>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="step">
+        <div class="step-num">Q</div>
+        <div class="step-body">
+          <h3>削除ボタンを押しても反応しない</h3>
+          <p>削除ボタンの不具合を修正済みです。押すと確認ダイアログが表示されます。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 8. スプレッドシートの操作 -->
+  <div class="section" id="s8">
+    <div class="section-hdr">
+      <div class="section-num">8</div>
+      <h2>スプレッドシートの操作</h2>
+    </div>
+    <div class="section-body">
+      <p style="margin-bottom:16px">「データ同期」を押すと、アプリのデータが Google スプレッドシートに書き込まれます。更新されるシートは2つです。</p>
+
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:10px">顧客管理シート</h3>
+      <p style="margin-bottom:8px;font-size:13px;color:#444">登録されている全案件が1行1件で書き込まれます（同期のたびに全件上書き）。</p>
+      <table>
+        <tr><th>列</th><th>項目名</th><th>内容</th></tr>
+        <tr><td>A</td><td>日付</td><td>到着日（受付日）</td></tr>
+        <tr><td>B</td><td>顧客名</td><td>依頼者氏名</td></tr>
+        <tr><td>C</td><td>修理品</td><td>ブランド名・商品名</td></tr>
+        <tr><td>D</td><td>金額</td><td>請求金額（未入力の場合は見積金額）</td></tr>
+        <tr><td>E</td><td>完了</td><td>ステータスが「完了」または「引渡済」の場合 TRUE</td></tr>
+      </table>
+
+      <hr class="divider">
+
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:10px">月次集計シート</h3>
+      <p style="margin-bottom:8px;font-size:13px;color:#444">直近12ヶ月分が自動計算されて書き込まれます。</p>
+      <table>
+        <tr><th>列</th><th>項目名</th><th>内容</th></tr>
+        <tr><td>A</td><td>年月</td><td>集計対象の年月（例：2026-05）</td></tr>
+        <tr><td>B</td><td>月間件数</td><td>その月に到着した案件の総数</td></tr>
+        <tr><td>C</td><td>月間売上</td><td>完了・引渡済の案件の金額合計のみ</td></tr>
+        <tr><td>D</td><td>月間完了</td><td>完了・引渡済になった案件数</td></tr>
+      </table>
+
+      <div class="note tip" style="margin-top:14px">
+        <strong>月間売上は「完了」「引渡済」ステータスのみ集計されます。</strong>受付中・作業中の案件は件数にはカウントされますが、売上には含まれません。
+      </div>
+      <div class="note warn" style="margin-top:8px">
+        同期はボタンを押したタイミングで一括送信されます。アプリを更新するだけでは自動送信されませんので、スプレッドシートを確認する前に必ず同期ボタンを押してください。
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. スマホでの操作 -->
+  <div class="section" id="s9">
+    <div class="section-hdr">
+      <div class="section-num">9</div>
+      <h2>スマホでの操作</h2>
+    </div>
+    <div class="section-body">
+      <p style="margin-bottom:16px">このアプリはスマートフォンのブラウザからも操作できます。ただし、スマホからアクセスするには <strong>GitHub Pages</strong> を使ってインターネット上に公開する必要があります。</p>
+
+      <div class="note warn" style="margin-bottom:16px">
+        <strong>注意：</strong>スマホとPCでデータは共有されません。データはそれぞれの端末のブラウザ内（localStorage）に保存されるため、PC で登録した案件はスマホからは見えません。スマホは外出先での確認用としてお使いください。
+      </div>
+
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:12px">Claudeへの依頼文（コピーしてそのまま使えます）</h3>
+      <div style="background:#1e1e1e;border-radius:8px;padding:20px 22px;font-family:monospace;font-size:12.5px;color:#ccc;line-height:1.9;white-space:pre-wrap;">このリペア管理アプリ（HTMLファイル）をスマートフォンからも使えるように、GitHub Pages で公開してください。
+
+【ファイル】
+・リペア管理アプリ_v2.html（メインアプリ）
+・logo.png（ロゴ画像）
+
+【やってほしいこと】
+1. GitHub に新しいリポジトリを作成する（名前は "repairflow" 等でOK）
+2. 上記2ファイルをアップロードする
+   ※ HTMLファイルは index.html にリネームしてください
+3. Settings → Pages → Branch: main / フォルダ: /(root) で GitHub Pages を有効にする
+4. 公開URLを教えてください
+
+【補足】
+・GitHubアカウントは持っています
+・公開後、スマホのブラウザでURLを開いてホーム画面に追加したいです</div>
+
+      <div class="note tip" style="margin-top:14px">
+        上記の文章をそのままコピーして Claude に送ると、GitHub Pages の設定を一緒に進めてもらえます。GitHubアカウントをお持ちでない場合は「GitHubアカウントを持っていません」と一言追加してください。
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">RepairFlow 取扱説明書 — 彩洗工房様向け — 2026年5月</div>
+
+</body>
+</html>
