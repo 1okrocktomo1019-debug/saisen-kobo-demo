@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>デモデータ投入</title></head>
+<body>
+<script>
+var d = [];
+d.push({id:'RF-005',arr:'2026-04-10',cli:'佐藤 恵美',item:'プラダ ナイロンバッグ',svc:'クリーニング',req:'全体クリーニング',est:6000,chg:6000,due:'2026-04-24',st:'引渡済',dlv:'2026-04-23',completedAt:'2026-04-23',ctype:'一般',brand:'プラダ',tel:'',det:'',note:'',photos:[]});
+d.push({id:'RF-006',arr:'2026-04-18',cli:'中村 龍太',item:'エルメス ケリー',svc:'リペア',req:'縫い直し',est:25000,chg:25000,due:'2026-05-02',st:'完了',dlv:'2026-05-01',completedAt:'2026-05-01',ctype:'バイヤー',brand:'エルメス',tel:'',det:'',note:'',photos:[]});
+d.push({id:'RF-007',arr:'2026-04-25',cli:'吉田 さくら',item:'コーチ レザーウォレット',svc:'リペア',req:'ファスナー修理',est:4500,chg:0,due:'2026-05-09',st:'作業中',dlv:'',completedAt:'',ctype:'一般',brand:'コーチ',tel:'',det:'',note:'',photos:[]});
+d.push({id:'RF-008',arr:'2026-04-28',cli:'田村 浩二',item:'グッチ ショルダーバッグ',svc:'リペア・クリーニング',req:'ハンドル交換',est:18000,chg:0,due:'2026-05-12',st:'受付中',dlv:'',completedAt:'',ctype:'バイヤー',brand:'グッチ',tel:'',det:'',note:'',photos:[]});
+d.push({id:'RF-009',arr:'2026-05-01',cli:'松本 あおい',item:'バレンシアガ スニーカー',svc:'クリーニング',req:'全体クリーニング',est:8000,chg:0,due:'2026-05-15',st:'受付中',dlv:'',completedAt:'',ctype:'一般',brand:'バレンシアガ',tel:'',det:'',note:'',photos:[]});
+
+var ex = JSON.parse(localStorage.getItem('repairflow_orders') || '[]');
+localStorage.setItem('repairflow_orders', JSON.stringify(ex.concat(d)));
+location.href = 'http://localhost:9999/%E3%83%AA%E3%83%9A%E3%82%A2%E7%AE%A1%E7%90%86%E3%82%A2%E3%83%97%E3%83%AA_v2.html';
+</script>
+</body>
+</html>
