@@ -108,7 +108,7 @@ tbody td{padding:10px 11px;font-size:12.5px;vertical-align:middle}
 .dp-wk{background:rgba(88,166,255,.12);color:var(--bl)}
 .dp-ok{background:rgba(63,185,80,.1);color:var(--gn)}
 .ssel{padding:4px 6px;background:var(--s2);border:1px solid var(--bd2);border-radius:6px;font-size:11px;color:var(--tx);font-family:var(--fn);cursor:pointer;outline:none}
-.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 .ov.on{display:flex}
 .modal{background:var(--sf);border:1px solid var(--bd2);border-radius:14px;padding:24px;width:540px;max-width:96vw;animation:su .22s ease;max-height:90vh;overflow-y:auto}
 @keyframes su{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
@@ -170,7 +170,7 @@ mark{background:rgba(63,185,80,.3);color:var(--tx);border-radius:3px;padding:0 2
 @media(max-width:1024px){.d2c{grid-template-columns:1fr!important}}
 @media(max-width:767px){
   .sb{transform:translateX(-100%)}.sb.on{transform:translateX(0)}
-  .hbg{display:flex}.bnav{display:block}.main{margin-left:0;padding-bottom:70px}
+  .hbg{display:flex}.bnav{display:block}.main{margin-left:0;padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))}
   .topbar{padding:0 13px;height:50px}.tbst{display:none}
   .page{padding:13px 13px 18px}
   .ph{flex-direction:column;align-items:flex-start}
