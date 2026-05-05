@@ -1,5 +1,18 @@
 var SHEET_ID = '10EUU_Cb8yy1-CSCVw2jOeSl_OCR-l4K0MeMQxcGEub8';
 
+function doGet(e) {
+  try {
+    var ss = SpreadsheetApp.openById(SHEET_ID);
+    var raw = ss.getSheetByName('raw_orders');
+    if (!raw) return ContentService.createTextOutput('{"orders":[]}').setMimeType(ContentService.MimeType.JSON);
+    var json = raw.getRange(1, 1).getValue();
+    var orders = json ? JSON.parse(json) : [];
+    return ContentService.createTextOutput(JSON.stringify({orders: orders})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput('{"orders":[]}').setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
@@ -15,6 +28,15 @@ function doPost(e) {
       s1.appendRow(['日付', '顧客名', '修理品', '金額', '完了']);
       s1.getRange(1, 1, 1, 5).setFontWeight('bold');
       if (rows.length > 0) s1.getRange(2, 1, rows.length, 5).setValues(rows);
+
+      // 全受付データをJSONで保存（データ取得用）
+      var fullOrders = data.data.orders || [];
+      if (fullOrders.length > 0) {
+        var raw = ss.getSheetByName('raw_orders');
+        if (!raw) raw = ss.insertSheet('raw_orders');
+        raw.clearContents();
+        raw.getRange(1, 1).setValue(JSON.stringify(fullOrders));
+      }
 
       // 月次集計をGAS側で直接計算して書き込み
       setupMonthlySheet(ss, rows);

@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0d1117;--sf:#161b22;--s2:#1c2128;--s3:#21262d;--bd:rgba(255,255,255,.08);--bd2:rgba(255,255,255,.14);--tx:#e6edf3;--mu:#7d8590;--mu2:#484f58;--gn:#3fb950;--gdm:rgba(63,185,80,.15);--bl:#58a6ff;--bdm:rgba(88,166,255,.15);--or:#d29922;--odm:rgba(210,153,34,.15);--rd:#f85149;--rdm:rgba(248,81,73,.15);--pp:#bc8cff;--pdm:rgba(188,140,255,.15);--yw:#e3b341;--fn:'Noto Sans JP',sans-serif;--mo:'DM Mono',monospace}
-*{margin:0;padding:0;box-sizing:border-box}html,body{height:100%}
+*{margin:0;padding:0;box-sizing:border-box}
 body{font-family:var(--fn);background:var(--bg);color:var(--tx);display:flex;min-height:100vh;overflow-x:hidden}
 .sb{width:220px;min-height:100vh;background:var(--bg);border-right:1px solid var(--bd);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
 .logo{padding:18px 16px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--bd)}
@@ -190,11 +190,23 @@ mark{background:rgba(63,185,80,.3);color:var(--tx);border-radius:3px;padding:0 2
 .ba-img{width:100%;height:150px;object-fit:cover;border-radius:7px;display:block}
 .ba-empty{height:150px;border-radius:7px;background:var(--s3);border:1.5px dashed var(--bd2);display:flex;align-items:center;justify-content:center;color:var(--mu);font-size:12px}
 @media(max-width:767px){.ba-img{height:110px}.ba-empty{height:110px}}
+.sp-sub{display:none}
+@media(max-width:767px){.sp-sub{display:block;font-size:10.5px;color:var(--mu);margin-top:2px}}
+.mob-table{display:block}.mob-cards{display:none}
+@media(max-width:767px){.mob-table{display:none!important}.mob-cards{display:flex;flex-direction:column;gap:8px}}
+.mcard{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px}
+.mcard-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
+.mcard-left{flex:1;min-width:0}
+.mcard-meta{font-family:var(--mo);font-size:10.5px;color:var(--mu);margin-bottom:3px}
+.mcard-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.mcard-item{font-size:11.5px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mcard-detail{font-size:11.5px;color:var(--mu);margin-bottom:8px;line-height:1.6}
+.mcard-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 </style>
 </head>
 <body>
 <aside class="sb" id="sb">
-  <div class="logo"><img src="logo.png" style="width:36px;height:36px;object-fit:contain;flex-shrink:0"><div><div class="ltx">リペア管理</div><div class="lsb">RepairFlow</div></div></div>
+  <div class="logo"><div><div class="ltx">リペア管理</div><div class="lsb">RepairFlow</div></div></div>
   <nav class="nav">
     <div class="nsc">メイン</div>
     <div class="ni on" onclick="go('dash')" id="ni-dash"><span class="nic"></span>ダッシュボード</div>
@@ -210,6 +222,7 @@ mark{background:rgba(63,185,80,.3);color:var(--tx);border-radius:3px;padding:0 2
     <div class="ni" onclick="go('set')" id="ni-set"><span class="nic"></span>サービス設定</div>
     <div style="margin-top:auto;padding-top:8px">
       <div class="ni" onclick="syncAll()" id="ni-sync" style="background:rgba(63,185,80,.08);color:var(--gn);margin-top:4px"><span class="nic"></span>データ同期</div>
+      <div class="ni" onclick="loadFromGAS()" id="ni-load" style="background:rgba(88,166,255,.08);color:var(--bl);margin-top:4px"><span class="nic">↓</span>データ取得</div>
       <div id="ni-sync-time" style="padding:2px 10px 4px;font-size:10px;color:var(--mu)"></div>
     </div>
   </nav>
@@ -295,10 +308,11 @@ mark{background:rgba(63,185,80,.3);color:var(--tx);border-radius:3px;padding:0 2
       <div class="siw"><span class="sic"></span><input class="sinp" id="lq" placeholder="&#20381;&#38972;&#32773;&#21517;&#12539;&#21830;&#21697;&#21517;&#12539;&#31649;&#29702;&#30058;&#21495;..." oninput="renderList()"></div>
       <select class="fs" id="lst" onchange="renderList()" style="width:130px"><option value="">&#12473;&#12486;&#12540;&#12479;&#12473;</option><option>&#21463;&#20184;&#20013;</option><option>&#20316;&#26989;&#20013;</option><option>&#23436;&#20102;</option><option>&#24341;&#28207;&#28168;</option></select>
     </div>
-    <div class="card"><div class="tw"><table>
+    <div class="card mob-table"><div class="tw"><table>
       <thead><tr><th>&#31649;&#29702;&#30058;&#21495;</th><th>&#21040;&#30528;&#26085;</th><th>&#20381;&#38972;&#32773;</th><th>&#21830;&#21697;&#21517;</th><th>&#31278;&#21029;</th><th class="hide-sp">&#20381;&#38972;&#20869;&#23481;</th><th class="hide-sp">&#35211;&#31309;</th><th>&#32013;&#26399;</th><th>&#12473;&#12486;&#12540;&#12479;&#12473;</th><th></th></tr></thead>
       <tbody id="ltb"></tbody>
     </table></div></div>
+    <div class="mob-cards" id="lcards"></div>
   </div>
   <div class="page" id="page-due">
     <div class="ph"><div><div class="ptl">&#32013;&#26399;&#31649;&#29702;</div><div class="psb">&#32013;&#26399;&#36817;&#12356;&#38918;&#12395;&#33258;&#21205;&#12477;&#12540;&#12488;</div></div></div>
@@ -307,17 +321,19 @@ mark{background:rgba(63,185,80,.3);color:var(--tx);border-radius:3px;padding:0 2
       <div class="kc o"><div class="kl">2&#26085;&#20197;&#20869;</div><div class="kv" id="d2d">0</div><div class="ks wn">&#20214;</div></div>
       <div class="kc b"><div class="kl">1&#36000;&#38291;&#20197;&#20869;</div><div class="kv" id="dwk">0</div><div class="ks">&#20214;</div></div>
     </div>
-    <div class="card"><div class="tw"><table>
+    <div class="card mob-table"><div class="tw"><table>
       <thead><tr><th>&#31649;&#29702;&#30058;&#21495;</th><th>&#20381;&#38972;&#32773;</th><th>&#21830;&#21697;&#21517;</th><th>&#31278;&#21029;</th><th class="hide-sp">&#21040;&#30528;&#26085;</th><th>&#32013;&#26399;</th><th>&#27531;&#26085;&#25968;</th><th>&#12473;&#12486;&#12540;&#12479;&#12473;</th><th></th></tr></thead>
       <tbody id="dtb"></tbody>
     </table></div></div>
+    <div class="mob-cards" id="dcards"></div>
   </div>
   <div class="page" id="page-done">
     <div class="ph"><div><div class="ptl">&#23436;&#20102;&#12539;&#24341;&#28207;&#28168;</div><div class="psb">&#23436;&#20102;&#12375;&#12383;&#20381;&#38972;&#12398;&#23653;&#27508;</div></div></div>
-    <div class="card"><div class="tw"><table>
+    <div class="card mob-table"><div class="tw"><table>
       <thead><tr><th>&#31649;&#29702;&#30058;&#21495;</th><th>&#21040;&#30528;&#26085;</th><th>&#20381;&#38972;&#32773;</th><th>&#21830;&#21697;&#21517;</th><th>&#31278;&#21029;</th><th class="hide-sp">&#20381;&#38972;&#20869;&#23481;</th><th>&#32013;&#26399;</th><th>&#24341;&#28207;&#26085;</th></tr></thead>
       <tbody id="dntb"></tbody>
     </table></div></div>
+    <div class="mob-cards" id="dncards"></div>
   </div>
   <div class="page" id="page-srch">
     <div class="ph"><div><div class="ptl">&#26908;&#32034;</div><div class="psb">&#20381;&#38972;&#32773;&#21517;&#12539;&#31649;&#29702;&#30058;&#21495;&#12391;&#26908;&#32034;</div></div></div>
@@ -482,7 +498,19 @@ function ctbdg(c){return c==='\u30d0\u30a4\u30e4\u30fc'?'<span class="badge bp">
 function stopt(c){return ['\u53d7\u4ed8\u4e2d','\u4f5c\u696d\u4e2d','\u5b8c\u4e86','\u5f15\u6e21\u6e08'].map(function(s){return '<option'+(s===c?' selected':'')+'>'+s+'</option>';}).join('');}
 function hlText(s,q){if(!q||!s)return s||'';var r=q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return s.replace(new RegExp('('+r+')','gi'),'<mark>$1</mark>');}
 function tick(){var n=new Date();var p=function(x){return String(x).padStart(2,'0');};document.getElementById('clock').textContent=n.getFullYear()+'/'+p(n.getMonth()+1)+'/'+p(n.getDate())+' '+p(n.getHours())+':'+p(n.getMinutes());}
-document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,15000);rdash();ubdg();});
+document.addEventListener('DOMContentLoaded',function(){
+  tick();setInterval(tick,15000);
+  if(GAS_URL){
+    fetch(GAS_URL).then(function(r){return r.json();}).then(function(d){
+      if(d&&Array.isArray(d.orders)&&d.orders.length){
+        orders=d.orders;
+        nxt=5;orders.forEach(function(o){var m=parseInt((o.id||'').replace('RF-',''),10);if(!isNaN(m)&&m>=nxt)nxt=m+1;});
+        save();
+      }
+      rdash();ubdg();
+    }).catch(function(){rdash();ubdg();});
+  }else{rdash();ubdg();}
+});
 var PN={dash:'\u30c0\u30c3\u30b7\u30e5\u30dc\u30fc\u30c9',new:'\u65b0\u898f\u53d7\u4ed8',list:'\u53d7\u4ed8\u4e00\u89a7',due:'\u7d0d\u671f\u7ba1\u7406',done:'\u5b8c\u4e86\u30fb\u5f15\u6e21\u6e08',photo:'\u753b\u50cf\u7ba1\u7406',rep:'\u6708\u6b21\u30ec\u30dd\u30fc\u30c8',srch:'\u691c\u7d22',set:'\u30b5\u30fc\u30d3\u30b9\u8a2d\u5b9a'};
 function go(id){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
@@ -573,15 +601,53 @@ function saveNew(){
   gasAdd(o);toast('\u53d7\u4ed8\u3092\u767b\u9332\u3057\u307e\u3057\u305f');ubdg();initF();rreg();
 }
 function rreg(){document.getElementById('rreg').innerHTML=orders.slice().reverse().slice(0,4).map(function(o){return '<div style="padding:9px 13px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12.5px;font-weight:500">'+o.cli+' | '+tr(o.item,14)+'</div><div style="font-size:11px;color:var(--mu);margin-top:1px">'+o.svc+': '+o.req+'</div></div><div style="text-align:right"><div style="font-size:10px;color:var(--mu);font-family:var(--mo)">'+o.id+'</div>'+dpill(o.due,o.st)+'</div></div>';}).join('');}
+function makeListCard(o){
+  return '<div class="mcard">'
+    +'<div class="mcard-hdr">'
+    +'<div class="mcard-left">'
+    +'<div class="mcard-meta">'+o.id+' '+o.arr+'</div>'
+    +'<div class="mcard-name">'+o.cli+'</div>'
+    +'<div class="mcard-item">'+o.item+'</div>'
+    +'</div>'
+    +'<div style="flex-shrink:0;margin-left:10px">'+dpill(o.due,o.st)+'</div>'
+    +'</div>'
+    +'<div class="mcard-detail">'+sbdg(o.svc)+' '+o.req+(o.det?' / '+o.det:'')+(o.est?' <span style="color:var(--bl);font-weight:600;font-family:var(--mo)">'+fmt(o.est)+'</span>':'')+'</div>'
+    +'<div class="mcard-actions">'
+    +'<select class="ssel" onchange="chgSt(\''+o.id+'\',this.value)">'+stopt(o.st)+'</select>'
+    +'<button class="btn btngh" style="padding:4px 10px;font-size:11px" onclick="openEdit(\''+o.id+'\')">\u7de8\u96c6</button>'
+    +'<button class="btn btngh" style="padding:4px 10px;font-size:11px" onclick="openReceipt(\''+o.id+'\')">&#31080;</button>'
+    +'<button class="btn" style="padding:4px 10px;font-size:11px;background:rgba(248,113,113,.15);color:var(--rd);border:1px solid rgba(248,113,113,.3)" onclick="confirmDel(\''+o.id+'\')">\u524a\u9664</button>'
+    +'</div>'
+    +'</div>';
+}
+function makeDueCard(o){
+  var d=dif(o.due);
+  return '<div class="mcard">'
+    +'<div class="mcard-hdr">'
+    +'<div class="mcard-left">'
+    +'<div class="mcard-meta">'+o.id+' \u7d0d\u671f: '+o.due+'</div>'
+    +'<div class="mcard-name">'+o.cli+'</div>'
+    +'<div class="mcard-item">'+o.item+'</div>'
+    +'</div>'
+    +'<div style="flex-shrink:0;margin-left:10px">'+dpill(o.due,o.st)+'</div>'
+    +'</div>'
+    +'<div class="mcard-detail">'+sbdg(o.svc)+'</div>'
+    +'<div class="mcard-actions">'
+    +'<select class="ssel" onchange="chgSt(\''+o.id+'\',this.value)">'+stopt(o.st)+'</select>'
+    +'<button class="btn btngh" style="padding:4px 10px;font-size:11px" onclick="openEdit(\''+o.id+'\')">\u7de8\u96c6</button>'
+    +'</div>'
+    +'</div>';
+}
 function renderList(){
   updateTabCounts();
   var q=(document.getElementById('lq').value||'').toLowerCase();var st=document.getElementById('lst').value;var sv=TAB_SVC[curTab]||'';
   var list=byDue(orders.filter(function(o){var mq=!q||(o.cli.toLowerCase().includes(q)||o.item.toLowerCase().includes(q)||o.id.toLowerCase().includes(q));return mq&&(!sv||o.svc===sv)&&(!st||o.st===st);}));
+  var lc=document.getElementById('lcards');if(lc)lc.innerHTML=list.length?list.map(makeListCard).join(''):('<div style="text-align:center;padding:28px;color:var(--mu);font-size:13px">\u8a72\u5f53\u306a\u3057</div>');
   var nr='<tr><td colspan="11" style="text-align:center;padding:28px;color:var(--mu);font-size:13px">\u8a72\u5f53\u306a\u3057</td></tr>';
   document.getElementById('ltb').innerHTML=list.length?list.map(function(o){
     return '<tr><td class="tmn">'+o.id+'</td><td class="tmn">'+o.arr+'</td><td class="tnm">'+o.cli+'</td>'
       +'<td class="hide-sp">'+ctbdg(o.ctype)+'</td>'
-      +'<td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+o.item+'</td>'
+      +'<td style="max-width:140px;overflow:hidden;text-overflow:ellipsis"><span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+o.item+'</span><div class="sp-sub">'+o.req+(o.det?' / '+o.det:'')+(o.est?' <span style="color:var(--bl);font-weight:600">'+fmt(o.est)+'</span>':'')+'</div></td>'
       +'<td>'+sbdg(o.svc)+'</td>'
       +'<td class="hide-sp" style="color:var(--mu);font-size:12px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+o.req+(o.det?' / '+o.det:'')+'</td>'
       +'<td class="tmn hide-sp">'+(o.est?fmt(o.est):'--')+'</td>'
@@ -601,10 +667,26 @@ function rdue(){
   document.getElementById('d2d').textContent=ac.filter(function(o){var d=dif(o.due);return d>=0&&d<=2;}).length;
   document.getElementById('dwk').textContent=ac.filter(function(o){var d=dif(o.due);return d>=0&&d<=7;}).length;
   document.getElementById('dtb').innerHTML=ac.map(function(o){return '<tr><td class="tmn">'+o.id+'</td><td class="tnm">'+o.cli+'</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+o.item+'</td><td>'+sbdg(o.svc)+'</td><td class="tmn hide-sp">'+o.arr+'</td><td class="tmn">'+o.due+'</td><td>'+dpill(o.due,o.st)+'</td><td><select class="ssel" onchange="chgSt(\''+o.id+'\',this.value)">'+stopt(o.st)+'</select></td><td><button class="btn btngh" style="padding:3px 7px;font-size:11px" onclick="openEdit(\''+o.id+'\')">\u7de8\u96c6</button></td></tr>';}).join('');
+  var dc=document.getElementById('dcards');if(dc)dc.innerHTML=ac.length?ac.map(makeDueCard).join(''):('<div style="text-align:center;padding:28px;color:var(--mu);font-size:13px">\u8a72\u5f53\u306a\u3057</div>');
+}
+function makeDoneCard(o){
+  return '<div class="mcard">'
+    +'<div class="mcard-hdr">'
+    +'<div class="mcard-left">'
+    +'<div class="mcard-meta">'+o.id+' 到着: '+o.arr+'</div>'
+    +'<div class="mcard-name">'+o.cli+'</div>'
+    +'<div class="mcard-item">'+o.item+'</div>'
+    +'</div>'
+    +'<div style="flex-shrink:0;margin-left:10px"><span class="badge bg">完了済</span></div>'
+    +'</div>'
+    +'<div class="mcard-detail">'+sbdg(o.svc)+' '+o.req+(o.chg?' <span style="color:var(--gn);font-weight:600;font-family:var(--mo)">'+fmt(o.chg)+'</span>':'')+'</div>'
+    +'<div style="font-size:11px;color:var(--mu)">引渡日: <span style="font-family:var(--mo);color:var(--tx)">'+(o.dlv||'--')+'</span></div>'
+    +'</div>';
 }
 function rdone(){
   var dn=orders.filter(isDone).slice().sort(function(a,b){return (b.dlv||'').localeCompare(a.dlv||'');});
   document.getElementById('dntb').innerHTML=dn.map(function(o){return '<tr><td class="tmn">'+o.id+'</td><td class="tmn">'+o.arr+'</td><td class="tnm">'+o.cli+'</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+o.item+'</td><td>'+sbdg(o.svc)+'</td><td class="hide-sp" style="font-size:12px;color:var(--mu)">'+o.req+'</td><td>'+dpill(o.due,o.st)+'</td><td class="tmn">'+(o.dlv||'--')+'</td></tr>';}).join('');
+  var dc=document.getElementById('dncards');if(dc)dc.innerHTML=dn.length?dn.map(makeDoneCard).join(''):('<div style="text-align:center;padding:28px;color:var(--mu);font-size:13px">完了済みの受付はありません</div>');
 }
 function chgSt(id,st){
   var o=orders.find(function(x){return x.id===id;});if(!o)return;
@@ -725,7 +807,7 @@ function confirmDel(id){
 function execDel(){
   var id=window._delId;
   orders=orders.filter(function(o){return o.id!==id;});
-  save();updateAll();closeOv("del-ov");
+  save();sendOrders(null);updateAll();closeOv("del-ov");
   toast("削除しました");
 }
 
@@ -774,17 +856,39 @@ function sendSummary(cb){
 }
 
 /* gasAdd / gasUpdate */
-function gasAdd(o){save();}
-function gasUpdate(o){save();}
+function gasAdd(o){save();sendOrders(null);}
+function gasUpdate(o){save();sendOrders(null);}
 
 /* 全受付データをシート1へ送信（完了列含む） */
 function sendOrders(cb){
   try{
     if(!GAS_URL){if(cb)cb();return;}
     var rows=orders.map(function(o){return [o.arr||'',o.cli||'',o.item||'',o.chg||o.est||0,isDone(o)];});
-    var payload={action:'sync_orders',data:{rows:rows}};
+    var payload={action:'sync_orders',data:{rows:rows,orders:orders}};
     fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)}).then(function(){if(cb)cb();}).catch(function(){if(cb)cb();});
   }catch(e){if(cb)cb();}
+}
+
+/* GASから全データを取得してローカルに反映 */
+function loadFromGAS(){
+  try{
+    if(!GAS_URL){toast('Google Sheets URLが設定されていません');return;}
+    toast('データを取得中...');
+    fetch(GAS_URL)
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d&&Array.isArray(d.orders)&&d.orders.length){
+          orders=d.orders;
+          nxt=5;
+          orders.forEach(function(o){var m=parseInt((o.id||'').replace('RF-',''),10);if(!isNaN(m)&&m>=nxt)nxt=m+1;});
+          save();updateAll();ubdg();
+          toast('データを取得しました（'+orders.length+'件）');
+        }else{
+          toast('取得データがありません');
+        }
+      })
+      .catch(function(){toast('データ取得に失敗しました');});
+  }catch(e){}
 }
 
 /* syncAll */
