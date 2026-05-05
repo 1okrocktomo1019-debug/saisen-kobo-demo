@@ -464,12 +464,7 @@ var SVC_MAP={'\u30ea\u30da\u30a2':'R','\u30af\u30ea\u30fc\u30cb\u30f3\u30b0':'C'
 var TAB_SVC={'':'',re:'\u30ea\u30da\u30a2',cl:'\u30af\u30ea\u30fc\u30cb\u30f3\u30b0',rc:'\u30ea\u30da\u30a2\u30fb\u30af\u30ea\u30fc\u30cb\u30f3\u30b0'};
 var SVC_ALL=['\u30ea\u30da\u30a2','\u30af\u30ea\u30fc\u30cb\u30f3\u30b0','\u30ea\u30da\u30a2\u30fb\u30af\u30ea\u30fc\u30cb\u30f3\u30b0'];
 function allO(s){var k=SVC_MAP[s]||s;return(SB[k]||[]).concat(SC[k]||[]);}
-var orders=[
-  {id:'RF-001',arr:'2025-04-10',cli:'\u7530\u4e2d \u82b1\u5b50',tel:'090-1234-5678',item:'LV \u30e2\u30ce\u30b0\u30e9\u30e0 \u30c8\u30fc\u30c8',svc:'\u30ea\u30da\u30a2',req:'\u30cf\u30f3\u30c9\u30eb\u4ea4\u63db',det:'',est:8000,chg:0,due:'2025-04-24',st:'\u4f5c\u696d\u4e2d',note:'',dlv:'',completedAt:'',ctype:'\u4e00\u822c',brand:'\u30eb\u30a4\u30fb\u30f4\u30a3\u30c8\u30f3',photos:[]},
-  {id:'RF-002',arr:'2025-04-15',cli:'\u5c71\u7530 \u592a\u90ce',tel:'080-9876-5432',item:'\u30b0\u30c3\u30c1 GG\u30b7\u30e7\u30eb\u30c0\u30fc',svc:'\u30af\u30ea\u30fc\u30cb\u30f3\u30b0',req:'\u5168\u4f53\u30af\u30ea\u30fc\u30cb\u30f3\u30b0',det:'',est:5000,chg:0,due:'2025-04-29',st:'\u53d7\u4ed8\u4e2d',note:'\u6025\u304e',dlv:'',completedAt:'',ctype:'\u30d0\u30a4\u30e4\u30fc',brand:'\u30b0\u30c3\u30c1',photos:[]},
-  {id:'RF-003',arr:'2025-04-17',cli:'\u9234\u6728 \u7f8e\u548f',tel:'070-5555-1234',item:'\u30b7\u30e3\u30cd\u30eb \u30de\u30c8\u30e9\u30c3\u30bb',svc:'\u30ea\u30da\u30a2\u30fb\u30af\u30ea\u30fc\u30cb\u30f3\u30b0',req:'\u30ea\u30da\u30a2\uff0b\u5168\u4f53\u30af\u30ea\u30fc\u30cb\u30f3\u30b0',det:'',est:15000,chg:0,due:'2025-05-01',st:'\u53d7\u4ed8\u4e2d',note:'',dlv:'',completedAt:'',ctype:'\u4e00\u822c',brand:'\u30b7\u30e3\u30cd\u30eb',photos:[]},
-  {id:'RF-004',arr:'2025-04-05',cli:'\u4f0a\u85e4 \u3042\u304b\u308a',tel:'',item:'\u30b3\u30fc\u30c1 \u30ec\u30b6\u30fc\u30d0\u30c3\u30b0',svc:'\u30ea\u30da\u30a2',req:'\u7e2b\u3044\u76f4\u3057',det:'',est:4500,chg:4500,due:'2025-04-19',st:'\u5f15\u6e21\u6e08',note:'',dlv:'2025-04-19',completedAt:'2025-04-19',ctype:'\u30d0\u30a4\u30e4\u30fc',brand:'\u30b3\u30fc\u30c1',photos:[]}
-];
+var orders=[];
 var nxt=5,eid=null,curTab='',photoOrderId=null;
 var GAS_URL='https://script.google.com/macros/s/AKfycbwGhZhY_AA6oClwdz-s3dynWROwVX8cmjBhM2oIw8CqnpxumRCBgScND5wSDD-D2l3tCw/exec';try{GAS_URL=localStorage.getItem('repairflow_gas')||GAS_URL;}catch(e){}
 var DRIVE_URL='';try{DRIVE_URL=localStorage.getItem('repairflow_drive')||'';}catch(e){}
