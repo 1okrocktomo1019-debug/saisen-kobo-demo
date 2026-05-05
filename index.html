@@ -492,16 +492,7 @@ function hlText(s,q){if(!q||!s)return s||'';var r=q.replace(/[.*+?^${}()|[\]\\]/
 function tick(){var n=new Date();var p=function(x){return String(x).padStart(2,'0');};document.getElementById('clock').textContent=n.getFullYear()+'/'+p(n.getMonth()+1)+'/'+p(n.getDate())+' '+p(n.getHours())+':'+p(n.getMinutes());}
 document.addEventListener('DOMContentLoaded',function(){
   tick();setInterval(tick,15000);
-  if(GAS_URL){
-    fetch(GAS_URL).then(function(r){return r.json();}).then(function(d){
-      if(d&&Array.isArray(d.orders)&&d.orders.length){
-        orders=d.orders;
-        nxt=5;orders.forEach(function(o){var m=parseInt((o.id||'').replace('RF-',''),10);if(!isNaN(m)&&m>=nxt)nxt=m+1;});
-        save();
-      }
-      rdash();ubdg();
-    }).catch(function(){rdash();ubdg();});
-  }else{rdash();ubdg();}
+  rdash();ubdg();
 });
 var PN={dash:'\u30c0\u30c3\u30b7\u30e5\u30dc\u30fc\u30c9',new:'\u65b0\u898f\u53d7\u4ed8',list:'\u53d7\u4ed8\u4e00\u89a7',due:'\u7d0d\u671f\u7ba1\u7406',done:'\u5b8c\u4e86\u30fb\u5f15\u6e21\u6e08',photo:'\u753b\u50cf\u7ba1\u7406',rep:'\u6708\u6b21\u30ec\u30dd\u30fc\u30c8',srch:'\u691c\u7d22',set:'\u30b5\u30fc\u30d3\u30b9\u8a2d\u5b9a'};
 function go(id){
@@ -842,20 +833,20 @@ function gasUpdate(o){save();gasPost({action:'update_order',data:{order:o}});}
 
 /* GASから全データを取得してローカルに反映 */
 function loadFromGAS(){
-  try{
-    if(!GAS_URL)return;
-    fetch(GAS_URL)
-      .then(function(r){return r.json();})
-      .then(function(d){
-        if(d&&Array.isArray(d.orders)&&d.orders.length){
-          orders=d.orders;
-          nxt=5;
-          orders.forEach(function(o){var m=parseInt((o.id||'').replace('RF-',''),10);if(!isNaN(m)&&m>=nxt)nxt=m+1;});
-          save();updateAll();ubdg();
-        }
-      })
-      .catch(function(){});
-  }catch(e){}
+  if(!GAS_URL)return;
+  toast('シートから取得中...');
+  fetch(GAS_URL)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d||!Array.isArray(d.orders)){toast('取得失敗');return;}
+      /* ローカルにないIDだけGASから追加（ローカルの編集を消さない） */
+      var localIds={};orders.forEach(function(o){localIds[o.id]=true;});
+      d.orders.forEach(function(go){if(!localIds[go.id])orders.push(go);});
+      nxt=5;orders.forEach(function(o){var m=parseInt((o.id||'').replace('RF-',''),10);if(!isNaN(m)&&m>=nxt)nxt=m+1;});
+      save();updateAll();ubdg();
+      toast('取得完了（'+d.orders.length+'件）');
+    })
+    .catch(function(e){console.error('[loadFromGAS]',e);toast('通信エラー');});
 }
 
 /* renderReport */
