@@ -471,7 +471,7 @@ var orders=[
   {id:'RF-004',arr:'2025-04-05',cli:'\u4f0a\u85e4 \u3042\u304b\u308a',tel:'',item:'\u30b3\u30fc\u30c1 \u30ec\u30b6\u30fc\u30d0\u30c3\u30b0',svc:'\u30ea\u30da\u30a2',req:'\u7e2b\u3044\u76f4\u3057',det:'',est:4500,chg:4500,due:'2025-04-19',st:'\u5f15\u6e21\u6e08',note:'',dlv:'2025-04-19',completedAt:'2025-04-19',ctype:'\u30d0\u30a4\u30e4\u30fc',brand:'\u30b3\u30fc\u30c1',photos:[]}
 ];
 var nxt=5,eid=null,curTab='',photoOrderId=null;
-var GAS_URL='';try{GAS_URL=localStorage.getItem('repairflow_gas')||'';}catch(e){}
+var GAS_URL='https://script.google.com/macros/s/AKfycbwGhZhY_AA6oClwdz-s3dynWROwVX8cmjBhM2oIw8CqnpxumRCBgScND5wSDD-D2l3tCw/exec';try{GAS_URL=localStorage.getItem('repairflow_gas')||GAS_URL;}catch(e){}
 var DRIVE_URL='';try{DRIVE_URL=localStorage.getItem('repairflow_drive')||'';}catch(e){}
 try{var _sv=localStorage.getItem('repairflow_orders');if(_sv){var _sp=JSON.parse(_sv);if(Array.isArray(_sp)&&_sp.length)orders=_sp;}var _sn=localStorage.getItem('repairflow_nxt');if(_sn)nxt=parseInt(_sn,10)||nxt;orders.forEach(function(o){var m=parseInt((o.id||'').replace('RF-',''),10);if(!isNaN(m)&&m>=nxt)nxt=m+1;});}catch(e){}
 
