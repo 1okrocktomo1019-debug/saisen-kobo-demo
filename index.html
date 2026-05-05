@@ -221,8 +221,6 @@ mark{background:rgba(63,185,80,.3);color:var(--tx);border-radius:3px;padding:0 2
     <div class="ni" onclick="go('srch')" id="ni-srch"><span class="nic"></span>検索</div>
     <div class="ni" onclick="go('set')" id="ni-set"><span class="nic"></span>サービス設定</div>
     <div style="margin-top:auto;padding-top:8px">
-      <div class="ni" onclick="syncAll()" id="ni-sync" style="background:rgba(63,185,80,.08);color:var(--gn);margin-top:4px"><span class="nic"></span>データ同期</div>
-
       <div id="ni-sync-time" style="padding:2px 10px 4px;font-size:10px;color:var(--mu)"></div>
     </div>
   </nav>
@@ -240,7 +238,6 @@ mark{background:rgba(63,185,80,.3);color:var(--tx);border-radius:3px;padding:0 2
     </div>
   </header>
 
-  <div class="sync-bar" id="sync-bar"><span id="sync-msg"> &#21516;&#26399;&#28168;&#12415;</span></div>
   <div class="np" id="np">
     <div class="nphdr"><span class="npttl"> &#36027;&#30693;</span><button class="btn btngh" style="padding:4px 9px;font-size:11px" onclick="toggleNP()">&#38281;&#12376;&#12427;</button></div>
     <div class="npl" id="npl"></div>
@@ -802,7 +799,7 @@ function confirmDel(id){
 function execDel(){
   var id=window._delId;
   orders=orders.filter(function(o){return o.id!==id;});
-  save();sendOrders(null);updateAll();closeOv("del-ov");
+  save();gasPost({action:'delete_order',data:{id:id}});updateAll();closeOv("del-ov");
   toast("削除しました");
 }
 
@@ -830,45 +827,22 @@ function saveDriveUrl(){try{var u=(document.getElementById('drive-url-set').valu
 function saveGasUrlSet(){try{var u=(document.getElementById('gas-url-set').value||'').trim();GAS_URL=u;localStorage.setItem('repairflow_gas',u);var sp=document.getElementById('gas-saved');if(sp){sp.style.display='inline';};}catch(e){}}
 
 /* ISOウィーク番号 */
-function wkLabel(){try{var d=new Date();var day=d.getDay()||7;d.setDate(d.getDate()+4-day);var y=d.getFullYear();var wk=Math.ceil(((d-new Date(y,0,1))/86400000+1)/7);return y+'-W'+String(wk).padStart(2,'0');}catch(e){return '';}}
-
-/* GASへサマリー送信 */
-function sendSummary(cb){
+/* GASへ非同期送信ヘルパー */
+function gasPost(payload){
   try{
-    if(!GAS_URL){if(cb)cb();return;}
-    var now=new Date();var ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-    var wl=wkLabel();
-    var mo=orders.filter(function(o){return (o.arr||'').slice(0,7)===ym;});
-    var wo=orders.filter(function(o){
-      try{var d=new Date(o.arr);var day=d.getDay()||7;var mon=new Date(d);mon.setDate(d.getDate()+4-day);var y=mon.getFullYear();var wk=Math.ceil(((mon-new Date(y,0,1))/86400000+1)/7);return (y+'-W'+String(wk).padStart(2,'0'))===wl;}catch(e){return false;}
-    });
-    var msales=mo.reduce(function(a,o){return a+(o.chg||0);},0);
-    var wsales=wo.reduce(function(a,o){return a+(o.chg||0);},0);
-    var mcomp=mo.filter(function(o){return isDone(o);}).length;
-    var payload={action:'sync_monthly',data:{yearMonth:ym,weekLabel:wl,monthlyOrders:mo.length,weeklyOrders:wo.length,monthlySales:msales,weeklySales:wsales,monthlyCompleted:mcomp,updatedAt:tod()}};
-    fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)}).then(function(){if(cb)cb();}).catch(function(){if(cb)cb();});
-  }catch(e){if(cb)cb();}
+    if(!GAS_URL)return;
+    fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)}).catch(function(){});
+  }catch(e){}
 }
 
 /* gasAdd / gasUpdate */
-function gasAdd(o){save();sendOrders(null);}
-function gasUpdate(o){save();sendOrders(null);}
-
-/* 全受付データをシート1へ送信（完了列含む） */
-function sendOrders(cb){
-  try{
-    if(!GAS_URL){if(cb)cb();return;}
-    var rows=orders.map(function(o){return [o.arr||'',o.cli||'',o.item||'',o.chg||o.est||0,isDone(o)];});
-    var payload={action:'sync_orders',data:{rows:rows,orders:orders}};
-    fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)}).then(function(){if(cb)cb();}).catch(function(){if(cb)cb();});
-  }catch(e){if(cb)cb();}
-}
+function gasAdd(o){save();gasPost({action:'add_order',data:{order:o}});}
+function gasUpdate(o){save();gasPost({action:'update_order',data:{order:o}});}
 
 /* GASから全データを取得してローカルに反映 */
 function loadFromGAS(){
   try{
-    if(!GAS_URL){toast('Google Sheets URLが設定されていません');return;}
-    toast('データを取得中...');
+    if(!GAS_URL)return;
     fetch(GAS_URL)
       .then(function(r){return r.json();})
       .then(function(d){
@@ -877,29 +851,9 @@ function loadFromGAS(){
           nxt=5;
           orders.forEach(function(o){var m=parseInt((o.id||'').replace('RF-',''),10);if(!isNaN(m)&&m>=nxt)nxt=m+1;});
           save();updateAll();ubdg();
-          toast('データを取得しました（'+orders.length+'件）');
-        }else{
-          toast('取得データがありません');
         }
       })
-      .catch(function(){toast('データ取得に失敗しました');});
-  }catch(e){}
-}
-
-/* syncAll */
-function syncAll(){
-  try{
-    var bar=document.getElementById('sync-bar');var msg=document.getElementById('sync-msg');var tm=document.getElementById('sync-time');
-    bar.style.display='flex';msg.innerHTML='<span class="spin">&#8635;</span> 同期中...';
-    sendOrders(function(){
-      try{
-        var now=new Date();var p=function(x){return String(x).padStart(2,'0');};
-        var ts=now.getFullYear()+'/'+p(now.getMonth()+1)+'/'+p(now.getDate())+' '+p(now.getHours())+':'+p(now.getMinutes());
-        msg.innerHTML=' 同期済み';if(tm){tm.innerHTML='<span style="color:var(--gn);font-weight:600">✓ 同期済み</span> <span style="color:var(--mu)">('+ts+')</span>';}var nt=document.getElementById('ni-sync-time');if(nt){nt.textContent='✓ '+ts;}
-        toast('Google Sheetsへ同期しました');
-        setTimeout(function(){try{bar.style.display='none';}catch(e){}},4000);
-      }catch(e){}
-    });
+      .catch(function(){});
   }catch(e){}
 }
 
