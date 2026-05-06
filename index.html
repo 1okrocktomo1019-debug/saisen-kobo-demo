@@ -841,7 +841,19 @@ function loadFromGAS(){
       if(!d||!Array.isArray(d.orders)){toast('取得失敗');return;}
       /* ローカルにないIDだけGASから追加（ローカルの編集を消さない） */
       var localIds={};orders.forEach(function(o){localIds[o.id]=true;});
-      d.orders.forEach(function(go){if(!localIds[go.id])orders.push(go);});
+      var MON={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
+      function normDate(v){
+        if(!v)return'';var s=String(v);
+        if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+        var m=s.match(/(\w{3})\s+(\d{1,2})\s+(\d{4})/);
+        if(m&&MON[m[1]])return m[3]+'-'+String(MON[m[1]]).padStart(2,'0')+'-'+String(m[2]).padStart(2,'0');
+        return s;
+      }
+      d.orders.forEach(function(go){
+        go.arr=normDate(go.arr);go.due=normDate(go.due);
+        go.dlv=normDate(go.dlv);go.completedAt=normDate(go.completedAt);
+        if(!localIds[go.id])orders.push(go);
+      });
       nxt=5;orders.forEach(function(o){var m=parseInt((o.id||'').replace('RF-',''),10);if(!isNaN(m)&&m>=nxt)nxt=m+1;});
       save();updateAll();ubdg();
       toast('取得完了（'+d.orders.length+'件）');
