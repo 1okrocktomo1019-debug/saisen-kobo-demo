@@ -778,7 +778,7 @@ function savePhoto(){
   var idx=o.photos.findIndex(function(p){return p.label===cat;});
   var np={url:url,label:cat,note:document.getElementById('photo-note').value,addedAt:tod()};
   if(idx>=0){o.photos[idx]=np;}else{o.photos.push(np);}
-  save();
+  save();gasUpdate(o);
   document.getElementById('photo-add-ov').classList.remove('on');
   toast('\u5199\u771f\u3092\u8ffd\u52a0\u3057\u307e\u3057\u305f');renderPhotos();
 }
