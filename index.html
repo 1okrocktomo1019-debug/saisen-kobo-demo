@@ -180,6 +180,7 @@ mark{background:rgba(63,185,80,.3);color:var(--tx);border-radius:3px;padding:0 2
   .np{width:100%;top:50px}
   .ov.on{align-items:flex-end}.modal{width:100%;border-radius:16px 16px 0 0;max-height:90vh}
   .hide-sp{display:none!important}
+  .show-sp-block{display:block!important}
   .toast{bottom:auto;top:12px;right:10px;left:10px}
   .sr{flex-direction:column}.sr .fs{width:100%!important}
   .tabs{gap:2px;padding:3px}.tab{padding:7px 3px;font-size:11px}.tab-n{font-size:16px}
@@ -192,7 +193,7 @@ mark{background:rgba(63,185,80,.3);color:var(--tx);border-radius:3px;padding:0 2
 @media(max-width:767px){.ba-img{height:110px}.ba-empty{height:110px}}
 .sp-sub{display:none}
 @media(max-width:767px){.sp-sub{display:block;font-size:10.5px;color:var(--mu);margin-top:2px}}
-.mob-table{display:block}.mob-cards{display:none}
+.mob-table{display:block}.mob-cards{display:none}.show-sp-block{display:none}
 @media(max-width:767px){.mob-table{display:none!important}.mob-cards{display:flex;flex-direction:column;gap:8px}}
 .mcard{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px}
 .mcard-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
@@ -243,7 +244,8 @@ mark{background:rgba(63,185,80,.3);color:var(--tx);border-radius:3px;padding:0 2
     <div class="npl" id="npl"></div>
   </div>
   <div class="page on" id="page-dash">
-    <div class="ph"><div><div class="ptl">&#12480;&#12483;&#12471;&#12517;&#12508;&#12540;&#12489;</div><div class="psb">&#26412;&#26085;&#12398;&#26989;&#21209;&#12392;&#21463;&#20184;&#29366;&#20917;</div></div><button class="btn btng" onclick="go('new')">+ &#26032;&#35215;&#21463;&#20184;</button></div>
+    <div class="ph"><div><div class="ptl">&#12480;&#12483;&#12471;&#12517;&#12508;&#12540;&#12489;</div><div class="psb">&#26412;&#26085;&#12398;&#26989;&#21209;&#12392;&#21463;&#20184;&#29366;&#20917;</div></div><button class="btn btng hide-sp" onclick="go('new')">+ &#26032;&#35215;&#21463;&#20184;</button></div>
+<button class="btn btng show-sp-block" style="width:100%;justify-content:center;padding:13px;font-size:15px;margin-bottom:12px" onclick="loadFromGAS()">&#8595; &#12487;&#12540;&#12479;&#12434;&#53D6;&#24471;</button>
     <div class="kg">
       <div class="kc b"><div class="kl">&#21463;&#20184;&#20013;</div><div class="kv" id="ko">0</div><div class="ks">&#20214;</div></div>
       <div class="kc o"><div class="kl">&#20316;&#26989;&#20013;</div><div class="kv" id="kw">0</div><div class="ks wn">&#20214;</div></div>
